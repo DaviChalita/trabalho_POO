@@ -11,11 +11,19 @@ public class Bolo {
         
         List<Produto> produtos = new ArrayList<>();
         
-        Produto produto1 = new Produto("Batata", 10, "Kg", new Date());                  
-        Produto produto2 = new Produto("Ovos", 1000, "Unidades", new Date());
+        Produto batatas = new Produto("Batata", 4, "Kg", new Date());                  
+        Produto ovos = new Produto("Ovos", 200, "Unidades", new Date());
+        Produto acucar = new Produto("Açucar", 5, "Kg", new Date());
+        Produto margarina = new Produto("Margarina", 2, "Kg", new Date());
+        Produto manteiga = new Produto("manteiga", 2, "Kg", new Date());
+        Produto leite = new Produto("Leite", 20, "L", new Date());
         
-        produtos.add(produto1);
-        produtos.add(produto2);
+        produtos.add(batatas);
+        produtos.add(ovos);
+        produtos.add(acucar);
+        produtos.add(margarina);
+        produtos.add(manteiga);
+        produtos.add(leite);
         
         Compras.realizaPedido(produtos);
     }
