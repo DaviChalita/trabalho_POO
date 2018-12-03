@@ -7,6 +7,7 @@ package pcp;
 
 import estoque.Produto;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import rh.Funcionario;
@@ -23,17 +24,20 @@ public class Producao {
     private static SimpleDateFormat formato;
     
     public static void solicitaProducao(String nomeReceita, int quantidade){
+        
+        Producao producaoReceita = new Producao();
         // Verifica existencia da receita
-        Receita receitaProduzida = verificaReceita(nomeReceita);
-        if (receitaProduzida == null){
+        producaoReceita.setReceita(verificaReceita(nomeReceita));
+        if (producaoReceita.getReceita() == null){
             //receitaProduzida = criaReceita("Teste", ingredientes, tempoPreparo, nomeReceita, 0);
-        }
-        else{
-            
-        }
+        }        
         // Aloca equipe
+        boolean resAlocaEquipe = alocaEquipe(producaoReceita);
         // Verifica ingredientnes
+            // Mudança do código deles
+        
         // Produz bolo
+        
         // Testa bolo
         // Atualiza estoque
         // Notifica Venda
@@ -52,7 +56,7 @@ public class Producao {
         return null;
     }
     
-    public static Receita criaReceita(String nome, List<Produto> ingredientes, Date tempoPreparo, String modoPreparo, int equipeMin){
+    public static Receita criaReceita(String nome, List<Produto> ingredientes, String tempoPreparo, String modoPreparo, int equipeMin){
         // Cria formater para tempo de preparo
         formato = new SimpleDateFormat("HH:mm");
         // Instancia uma nova receita com dados do Swing
@@ -63,24 +67,38 @@ public class Producao {
         return novaReceita;
     }
     
-    public static void alocaEquipe(Receita receita){
-        int equipeMin = receita.getEquipeMinima(), index;
-        Funcionario gerente;
+    public static boolean alocaEquipe(Producao producao){
+        int equipeMin = producao.getReceita().getEquipeMinima(), index;
+        Funcionario gerente = new Funcionario();
         
-        // Verificar disponibilidade de funcionários
+        // Recebe nome do gerente da view
         
-        // Seleciona um gerente
-        do{
-            index = (int) Math.floor(Math.random() * (RH.getFuncionarios().size()));
-            gerente = RH.recuperar(index);
-        } while (gerente.isAlocado());
-        // Muda estado de alocação
-        // Não sei se essa redundância é necessária
-        // TESTAR REDUNDÂNCIA
-        RH.recuperar(index).alocaFuncionario();
-        gerente.alocaFuncionario();
+        // Aloca gerente
+         producao.setGerente(gerente);
+
+        // Aloca funcionários
+        for(Funcionario f : RH.getFuncionarios()){
+            if(equipeMin > producao.getEquipeTecnica().size() && !f.isAlocado()){
+                producao.getEquipeTecnica().add(f);
+                f.alocaFuncionario();
+            }
+        }
+        if(equipeMin>producao.getEquipeTecnica().size()){
+            // Solicita contratação
+            
+            // Aloca equipe novamente
+            return alocaEquipe(producao);
+        }
         
-        // Alocar equipe técnica
+        // Retorna true caso tenha conseguido alocar equipe
+        return true;
+    }
+    
+    public static boolean produzBolo(Producao producao){
+        
+        
+        
+        return true;
     }
     
     public static boolean testaProduto(){
@@ -99,6 +117,13 @@ public class Producao {
     private Receita receita;
 
     public Producao() {
+        this.equipeTecnica = new ArrayList<>();
+    }
+
+    public Producao(Funcionario gerente, Receita receita) {
+        this.gerente = gerente;
+        this.receita = receita;
+        this.equipeTecnica = new ArrayList<>();
     }
 
     public Producao(Funcionario gerente, List<Funcionario> equipeTecnica, Receita receita) {

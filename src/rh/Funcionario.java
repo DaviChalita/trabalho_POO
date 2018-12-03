@@ -6,6 +6,9 @@ public class Funcionario {
     private String cpf;
     private String cep;
     private boolean alocado;
+
+    public Funcionario() {
+    }
     
     public Funcionario(String nome, String cpf, String cep) {
         this.nome = nome;
