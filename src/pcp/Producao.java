@@ -96,6 +96,7 @@ public class Producao {
     
     public static boolean produzBolo(Producao producao){
         
+        // Tira ingredientes do estoque
         
         
         return true;
