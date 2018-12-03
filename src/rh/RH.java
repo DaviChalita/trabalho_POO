@@ -4,7 +4,11 @@ import java.util.*;
 
 public class RH {
     private static List<Funcionario> funcionarios = new ArrayList<>();
-  
+
+    public static List<Funcionario> getFuncionarios() {
+        return funcionarios;
+    }
+    
     public static void contratar(Funcionario funcionario){
          funcionarios.add(funcionario);
     }    
@@ -24,5 +28,9 @@ public class RH {
         }
         
         return null;
+    }
+    
+    public static Funcionario recuperar(int index){
+        return funcionarios.get(index);
     }
 }

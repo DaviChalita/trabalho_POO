@@ -121,14 +121,7 @@ public class ProducaoOld {
             gerente = funcionarios.get(index);
         }while (gerente.isOcupado());
         // Inicializar listas equipeOreacional e livrereceitas em um lugar melhor
-        equipeOperacional = new ArrayList<>();
-        do{
-            index = (int) Math.floor(Math.random()*funcionarios.size());
-            Funcionario f = funcionarios.get(index);
-            if (!f.isOcupado()){
-                equipeOperacional.add(f);
-            }
-        }while (equipeOperacional.size() < receita.getEquipeMinima());
+        SII
         
         
         

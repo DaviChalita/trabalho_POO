@@ -8,10 +8,10 @@ public class Funcionario {
     private boolean alocado;
     
     public Funcionario(String nome, String cpf, String cep) {
-        setNome(nome);
-        setCpf(cpf);
-        setCep(cep);
-        setLocacao(false);
+        this.nome = nome;
+        this.cpf = cpf;
+        this.cep = cep;
+        this.alocado = false;
     }
     
     private void setNome(String nome) {
@@ -38,7 +38,15 @@ public class Funcionario {
         return cep;
     }
     
-    public void setLocacao(boolean locacao) {
-        this.alocado = locacao;
+    public void alocaFuncionario() {
+        this.alocado = true;
+    }
+    
+    public void desalocaFuncionario(){
+        this.alocado = false;
+    }
+    
+    public boolean isAlocado(){
+        return this.alocado;
     }
 }
