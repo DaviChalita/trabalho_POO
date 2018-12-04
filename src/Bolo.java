@@ -4,6 +4,7 @@ import estoque.Produto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import venda.VendaGUI;
 
 public class Bolo {
     
@@ -18,6 +19,9 @@ public class Bolo {
         Produto manteiga = new Produto("manteiga", 2, "Kg", new Date());
         Produto leite = new Produto("Leite", 20, "L", new Date());
         
+        Produto bolo = new Produto("Bolo", 1, "Unidades", new Date());
+        produtos.add(bolo);
+        
         produtos.add(batatas);
         produtos.add(ovos);
         produtos.add(acucar);
@@ -26,5 +30,10 @@ public class Bolo {
         produtos.add(leite);
         
         Compras.realizaPedido(produtos);
+        
+        BoloGUI boloGUI = new BoloGUI();
+        boloGUI.setVisible(true);
+        
+        
     }
 }

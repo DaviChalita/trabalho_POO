@@ -1,12 +1,13 @@
 package venda;
 
+import estoque.Estoque;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import estoque.Produto;
 
 public class VendaGUI extends javax.swing.JFrame {
-    private Venda carrinho = new Venda();
+    private Venda venda = new Venda();
         
     private float valorTotal;
     private int topo;
@@ -63,12 +64,6 @@ public class VendaGUI extends javax.swing.JFrame {
         jTextFieldPreco.setEditable(false);
 
         jLabelQuantidadeProduto.setText("Quantidade:");
-
-        jTextFieldQuantidadeProduto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldQuantidadeProdutoActionPerformed(evt);
-            }
-        });
 
         jTableVenda.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -214,6 +209,11 @@ public class VendaGUI extends javax.swing.JFrame {
         });
 
         jButtonCancelar.setText("Voltar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
 
         jLabelPreco.setText("Preço: R$");
 
@@ -340,10 +340,6 @@ public class VendaGUI extends javax.swing.JFrame {
         jTextFieldNomeProduto.setText("");
     }//GEN-LAST:event_jTextFieldNomeProdutoActionPerformed
 
-    private void jTextFieldQuantidadeProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldQuantidadeProdutoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldQuantidadeProdutoActionPerformed
-
     private void jButtonRemoverProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverProdutoActionPerformed
         try {
             DefaultTableModel model = (DefaultTableModel) this.jTableVenda.getModel();
@@ -354,8 +350,8 @@ public class VendaGUI extends javax.swing.JFrame {
 
             this.atualizaValorTotal(-(valorUnitario * quantidade));
 
-            this.carrinho.removeItens(jTableVenda.getModel().getValueAt(jTableVenda.getSelectedRow(), 0).toString());
-            this.carrinho.listaItens();
+            this.venda.removeItens(jTableVenda.getModel().getValueAt(jTableVenda.getSelectedRow(), 0).toString());
+            this.venda.listaItens();
 
             for (int i = 0; i < rows.length; i++) {
                 model.removeRow(rows[i] - i);
@@ -365,12 +361,12 @@ public class VendaGUI extends javax.swing.JFrame {
             this.topo--;  
             
         } catch (ArrayIndexOutOfBoundsException err) {
-            System.out.println("Selecione o item a ser removido!");
+           JOptionPane.showMessageDialog(null, "Selecione o item a ser removido!");
         }
     }//GEN-LAST:event_jButtonRemoverProdutoActionPerformed
 
     private void jTextFieldNomeProdutoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNomeProdutoFocusLost
-        jTextFieldPreco.setText("15.00");
+        jTextFieldPreco.setText("21.12");
     }//GEN-LAST:event_jTextFieldNomeProdutoFocusLost
     
     private void jButtonAdicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarProdutoActionPerformed
@@ -380,28 +376,41 @@ public class VendaGUI extends javax.swing.JFrame {
             float valorUnitario = Float.parseFloat(jTextFieldPreco.getText());
             float subTotal = valorUnitario * quantidade;                
         
-            Produto itemCarrinho = new Produto(
-                    nome,
-                    quantidade,
-                    "Unidades",
-                    new Date()
-            );
+            float quantidadeDisponivel = Estoque.getQuantidadeProduto(nome);
+            
+            if (quantidadeDisponivel > -1) {
+                
+                if (quantidadeDisponivel >= quantidade) {  
+                    
+                    Produto itemCarrinho = new Produto(
+                            nome,
+                            quantidade,
+                            "Unidades",
+                            new Date()
+                    );
 
-            this.carrinho.adicionaItem(itemCarrinho);
-            this.carrinho.listaItens();
-
-            this.atualizaValorTotal(subTotal);
-            this.atualizaTabela(
-                    nome, 
-                    String.valueOf(quantidade),
-                    String.valueOf(valorUnitario),
-                    String.valueOf(subTotal)
-            );
-            this.limpaCampos();        
-            this.topo++;   
-        
+                    this.venda.adicionaItem(itemCarrinho);
+                    
+                    this.atualizaValorTotal(subTotal);
+                    this.atualizaTabela(
+                            nome, 
+                            String.valueOf(quantidade),
+                            String.valueOf(valorUnitario),
+                            String.valueOf(subTotal)
+                    );
+                    this.limpaCampos();        
+                    this.topo++;  
+                    
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não há toda quantidade disponível no estoque!");
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi encontrado esse produto no estoque!");
+            }
+            
         } catch (NumberFormatException err) {
-            System.out.println("Preencha todos os campos incorretamente!!");
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos corretamente!!");
             
         }
     }//GEN-LAST:event_jButtonAdicionarProdutoActionPerformed
@@ -412,34 +421,42 @@ public class VendaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldValorPagoFocusLost
 
     private void jButtonConfirmarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVendaActionPerformed
-        DefaultTableModel tabela = (DefaultTableModel) this.jTableVenda.getModel();
-        int[] rows = jTableVenda.getSelectedRows();
-        
-        float valorPago = Float.parseFloat(jTextFieldValorPago.getText());
-        float valorVenda = Float.parseFloat(jTextFieldTotalVenda.getText());
-        
-        if (valorPago >= valorVenda) {
-            for (int i = 0; i < rows.length; i++) {
-                tabela.removeRow(rows[i] - i);
+        try {
+            DefaultTableModel tabela = (DefaultTableModel) this.jTableVenda.getModel();
+            int[] rows = jTableVenda.getSelectedRows();
+
+            float valorPago = Float.parseFloat(jTextFieldValorPago.getText());
+            float valorVenda = Float.parseFloat(jTextFieldTotalVenda.getText());
+
+            if (valorPago >= valorVenda) {
+                for (int i = 0; i < rows.length; i++) {
+                    tabela.removeRow(rows[i] - i);
+                }
+
+                for (int row = 0; row < tabela.getRowCount(); row++) {
+                    for (int i = 0; i < 4; i++) {
+                        jTableVenda.setValueAt("", row, i);
+                    }                
+                }        
+
+                this.venda.vendeProdutos();
+                this.topo = 0;
+                this.limpaCampos();                
+
+                JOptionPane.showMessageDialog(null, "Venda realizada com sucesso! Nota fiscal emitida :3");
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Valor pago deve cobrir valor da venda!");
             }
-
-            for (int row = 0; row < tabela.getRowCount(); row++) {
-                for (int i = 0; i < 4; i++) {
-                    jTableVenda.setValueAt("", row, i);
-                }                
-            }        
-
-            this.carrinho.vendeProdutos();
-            this.topo = 0;
-            this.limpaCampos();                
-
-            JOptionPane.showMessageDialog(null, "Venda realizada com sucesso! Nota fiscal emitida");
             
-        } else {
-            JOptionPane.showMessageDialog(null, "Valor pago deve cobrir valor da venda!");
+        } catch (NumberFormatException err) {
+            JOptionPane.showMessageDialog(null, "Preencha o valor pago!!");
         }
-         
     }//GEN-LAST:event_jButtonConfirmarVendaActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     public static void main(String args[]) {
         

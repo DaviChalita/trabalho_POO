@@ -6,24 +6,15 @@ public class Funcionario {
     private String cpf;
     private String cep;
     private boolean alocado;
+
+    public Funcionario() {
+    }
     
     public Funcionario(String nome, String cpf, String cep) {
-        setNome(nome);
-        setCpf(cpf);
-        setCep(cep);
-        setLocacao(false);
-    }
-    
-    private void setNome(String nome) {
         this.nome = nome;
-    }
-
-    private void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    private void setCep(String cep) {
         this.cep = cep;
+        this.alocado = false;
     }
  
     public String getNome() {
@@ -38,7 +29,15 @@ public class Funcionario {
         return cep;
     }
     
-    public void setLocacao(boolean locacao) {
-        this.alocado = locacao;
+    public void alocaFuncionario() {
+        this.alocado = true;
+    }
+    
+    public void desalocaFuncionario(){
+        this.alocado = false;
+    }
+    
+    public boolean isAlocado(){
+        return this.alocado;
     }
 }

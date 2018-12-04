@@ -3,7 +3,7 @@ package estoque;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListaProdutos extends javax.swing.JFrame {    
+public class EstoqueGUI extends javax.swing.JFrame {    
     
     List<String> retornaProdutos(List<Produto> produtos) {
         List<String> produtosString = new ArrayList<>();
@@ -18,7 +18,7 @@ public class ListaProdutos extends javax.swing.JFrame {
     private List<Produto> produtos = Estoque.getProdutos();
     private List<String> listaProdutos = retornaProdutos(produtos);
     
-    public ListaProdutos() {
+    public EstoqueGUI() {
         initComponents();
     }
 
@@ -68,7 +68,7 @@ public class ListaProdutos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
@@ -85,20 +85,21 @@ public class ListaProdutos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EstoqueGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EstoqueGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EstoqueGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EstoqueGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListaProdutos().setVisible(true);
+                new EstoqueGUI().setVisible(true);
             }
         });
     }
